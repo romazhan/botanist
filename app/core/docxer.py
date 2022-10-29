@@ -121,7 +121,7 @@ class Docxer(object):
         })
 
         file_path = self._create_temp_path(
-            f'{report_data.discipline}_{report_data.student}'
+            f'{report_data.discipline}_{report_data.student}_Реферат'
         )
 
         document.save(file_path)
