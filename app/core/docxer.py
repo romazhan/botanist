@@ -27,7 +27,7 @@ class _Compilator(object):
     def _normalize_part(self, part: str) -> str:
         return f"{_Compilator._INDENT}{part.replace('=', '').strip()}\n"
 
-    def _compile(self, file_path: str, content: str) -> None:
+    def compile(self, file_path: str, content: str) -> None:
         document = self._engine(file_path)
 
         paragraph = document.add_paragraph()
@@ -126,7 +126,7 @@ class Docxer(object):
 
         document.save(file_path)
 
-        self._compilator._compile(file_path, self._searcher.surf(report_data.topic))
+        self._compilator.compile(file_path, self._searcher.surf(report_data.topic))
         await self._send_file(msg, file_path)
 
 
