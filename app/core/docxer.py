@@ -69,29 +69,22 @@ class _Compilator(object):
         document.save(file_path)
 
 
-class ReportData(NamedTuple):
-    discipline: str
-    topic: str
-    student: str
-    teacher: str
-
-
-class Docxer(object):
+class _Docxer(object):
     _TEMPLATES_PATH = './templates'
-    _TEMP_PATH = './temp'
+    _TEMP_PATH = './temp/docs'
 
     _REPORT_TEMPLATE_NAME = 'report.docx'
 
-    def __init__(self: Docxer) -> None:
+    def __init__(self: _Docxer) -> None:
         self._template_engine = DocxTemplate
         self._compilator = _Compilator()
         self._searcher = Searcher()
     
     def _get_template_path(self, template_name: str) -> str:
-        return f'{Docxer._TEMPLATES_PATH}/{template_name}'
+        return f'{_Docxer._TEMPLATES_PATH}/{template_name}'
     
     def _create_temp_path(self, file_name: str) -> str:
-        return f'{Docxer._TEMP_PATH}/' \
+        return f'{_Docxer._TEMP_PATH}/' \
             f"{file_name.replace(' ', '_')}_" \
             f'{random.randint(100000, 999999)}.docx'
 
@@ -110,7 +103,7 @@ class Docxer(object):
 
     async def report(self, msg: types.Message, report_data: ReportData) -> None:
         document = self._template_engine(
-            self._get_template_path(Docxer._REPORT_TEMPLATE_NAME)
+            self._get_template_path(_Docxer._REPORT_TEMPLATE_NAME)
         )
 
         document.render({
@@ -130,4 +123,11 @@ class Docxer(object):
         await self._send_file(msg, file_path)
 
 
-docxer = Docxer()
+class ReportData(NamedTuple):
+    discipline: str
+    topic: str
+    student: str
+    teacher: str
+
+
+docxer = _Docxer()

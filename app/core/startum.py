@@ -4,6 +4,7 @@ from aiogram import types
 from .kernel import BotanistDispatcher
 
 from .docxer import ReportData, docxer
+from .musician import musician
 
 
 # front-controller:
@@ -11,6 +12,15 @@ def init_handlers(dispatcher: BotanistDispatcher) -> None:
     @dispatcher.message_handler(commands=['start'])
     async def _(msg: types.Message) -> None:
         await msg.answer('Started')
+
+
+    @dispatcher.message_handler(commands=['music'])
+    async def _(msg: types.Message) -> None:
+        try:
+            await musician.send_random_music(msg)
+        except Exception as unhandled_error:
+            print(f'[unhandled_error][music]: {unhandled_error}')
+            await msg.reply('Музыки не будет...')
 
 
     @dispatcher.message_handler(lambda msg: msg.text.startswith('/report'))
@@ -34,5 +44,5 @@ def init_handlers(dispatcher: BotanistDispatcher) -> None:
                 '<code>/report дисциплина, тема, студент, учитель</code>'
             )
         except Exception as unhandled_error:
-            print(f'[unhandled_error]: {unhandled_error}')
+            print(f'[unhandled_error][report]: {unhandled_error}')
             await msg.reply('Ошибка на сервере...')

@@ -38,7 +38,7 @@ class Botanist(Bot):
             raise TelegramTokenError('inactive TELEGRAM_TOKEN', False)
 
         except Exception as unhandled_error:
-            print(f'[unhandled_error]: {unhandled_error}')
+            print(f'[unhandled_error][botanist]: {unhandled_error}')
             sleep(Botanist._DELAY_FOR_RESTART)
 
             gc.collect()
