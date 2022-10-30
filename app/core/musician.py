@@ -93,7 +93,7 @@ class _Musician(object):
         music_context = self._get_music_context()
 
         if not music_context:
-            await msg.reply('Не удалось найти мзыку')
+            await msg.reply('Не удалось найти музыку')
             return
 
         file_path = self._save_music(music_context)
