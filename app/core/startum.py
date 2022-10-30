@@ -8,6 +8,11 @@ from .docxer import ReportData, docxer
 
 # front-controller:
 def init_handlers(dispatcher: BotanistDispatcher) -> None:
+    @dispatcher.message_handler(commands=['start'])
+    async def _(msg: types.Message) -> None:
+        await msg.answer('Started')
+
+
     @dispatcher.message_handler(lambda msg: msg.text.startswith('/report'))
     async def _(msg: types.Message) -> None:
         msg_report_context = msg.text.replace('/report', '').split(',')
