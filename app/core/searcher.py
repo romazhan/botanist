@@ -24,14 +24,14 @@ class Searcher(object):
         return content
 
     def surf(self, topic: str) -> str: # content
+        warnings.simplefilter('ignore')
+
         content = 'Контент не найден...'
 
         def _surf(pages: list) -> None:
             nonlocal content
 
             if pages:
-                warnings.simplefilter('ignore')
-
                 page = random.choice(pages)
                 try:
                     content = self._filter(
