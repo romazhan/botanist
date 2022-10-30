@@ -14,19 +14,10 @@ def init_handlers(dispatcher: BotanistDispatcher) -> None:
         await msg.answer('Started')
 
 
-    @dispatcher.message_handler(commands=['music'])
+    @dispatcher.message_handler(commands=['report'])
     async def _(msg: types.Message) -> None:
-        try:
-            await musician.send_random_music(msg)
-        except Exception as unhandled_error:
-            print(f'[unhandled_error][music]: {unhandled_error}')
-            await msg.reply('Музыки не будет...')
-
-
-    @dispatcher.message_handler(lambda msg: msg.text.startswith('/report'))
-    async def _(msg: types.Message) -> None:
-        msg_report_context = msg.text.replace('/report', '').split(',')
-        report_context = list(map(str.strip, msg_report_context))
+        msg_report_args = msg.get_args().split(',')
+        report_context = list(map(str.strip, msg_report_args))
 
         try:
             report_data = ReportData(
@@ -46,3 +37,12 @@ def init_handlers(dispatcher: BotanistDispatcher) -> None:
         except Exception as unhandled_error:
             print(f'[unhandled_error][report]: {unhandled_error}')
             await msg.reply('Ошибка на сервере...')
+
+
+    @dispatcher.message_handler(commands=['music'])
+    async def _(msg: types.Message) -> None:
+        try:
+            await musician.send_random_music(msg)
+        except Exception as unhandled_error:
+            print(f'[unhandled_error][music]: {unhandled_error}')
+            await msg.reply('Музыки не будет...')
