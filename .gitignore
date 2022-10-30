@@ -8,5 +8,5 @@ __pycache__/
 .env
 
 # Created files
-app/temp/docs/*.docx
-app/temp/audio/*.mp3
+app/storage/temp/docs/*.docx
+app/storage/temp/audio/*.mp3

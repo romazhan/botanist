@@ -22,7 +22,7 @@ class _Musician(object):
         'meta': 'data-musmeta'
     }
 
-    _TEMP_PATH = './temp/audio'
+    _TEMP_PATH = './storage/temp/audio'
 
     _MAX_ATTEMPT_NUMBER = 5
     _MIN_BYTE_LENGTH = 9999

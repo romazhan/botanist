@@ -70,8 +70,8 @@ class _Compilator(object):
 
 
 class _Docxer(object):
-    _TEMPLATES_PATH = './templates'
-    _TEMP_PATH = './temp/docs'
+    _TEMPLATES_PATH = './storage/templates'
+    _TEMP_PATH = './storage/temp/docs'
 
     _REPORT_TEMPLATE_NAME = 'report.docx'
 
