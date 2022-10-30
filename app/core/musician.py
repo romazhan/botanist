@@ -16,7 +16,7 @@ import os
 
 class _Musician(object):
     _TARGET_DATA = {
-        'url': 'https://eu.hitmotop.com/',
+        'site_url': 'https://eu.hitmotop.com',
         'tag': 'li',
         'class': 'tracks__item track mustoggler',
         'meta': 'data-musmeta'
@@ -43,7 +43,7 @@ class _Musician(object):
 
         target_data = _Musician._TARGET_DATA
 
-        text_content = requests.get(target_data['url']).text
+        text_content = requests.get(target_data['site_url']).text
         soup = BS(text_content, features='lxml')
         
         tag_list = soup.find_all(target_data['tag'], {
@@ -93,7 +93,11 @@ class _Musician(object):
         music_context = self._get_music_context()
 
         if not music_context:
-            await msg.reply('Не удалось найти музыку')
+            site_url = _Musician._TARGET_DATA['site_url']
+
+            await msg.reply('Не удалось получить музыку...\n\n' \
+                f"Сайт: <a href='{site_url}'>{site_url}</a>"
+            )
             return
 
         file_path = self._save_music(music_context)
