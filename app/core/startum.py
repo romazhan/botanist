@@ -30,8 +30,8 @@ def init_handlers(dispatcher: BotanistDispatcher) -> None:
             await docxer.report(msg, report_data)
         except IndexError:
             await msg.reply(
-                '<b>⚠️ Недостаточно аргументов</b>\n\n' \
-                'ℹ️ Используй следующий формат:\n' \
+                '<b>🛀🏽 Недостаточно аргументов</b>\n\n' \
+                '🦧 Используйте следующий формат:\n' \
                 '<code>/report дисциплина, тема, студент, учитель</code>'
             )
         except Exception as unhandled_error:
