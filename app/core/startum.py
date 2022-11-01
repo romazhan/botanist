@@ -25,7 +25,7 @@ def init_handlers(dispatcher: BotanistDispatcher) -> None:
                 discipline=f'{rc[0][0].upper()}{rc[0][1:]}',
                 topic=f'{rc[1][0].upper()}{rc[1][1:]}',
                 student=rc[2].title(),
-                teacher=rc[3].title(),
+                teacher=rc[3].title()
             )
 
             await docxer.report(msg, report_data)
