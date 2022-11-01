@@ -10,7 +10,7 @@ import re
 
 
 class Searcher(object):
-    _PAGE_LIMIT = 5
+    _PAGE_LIMIT = 1 # ?
 
     def __init__(self: Searcher) -> None:
         self._wiki = wikipedia
