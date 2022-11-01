@@ -16,15 +16,16 @@ def init_handlers(dispatcher: BotanistDispatcher) -> None:
 
     @dispatcher.message_handler(commands=['report'])
     async def _(msg: types.Message) -> None:
-        msg_report_args = msg.get_args().split(',')
-        report_context = list(map(str.strip, msg_report_args))
+        rc = list(map( # report context
+            str.strip, msg.get_args().split(',')
+        ))
 
         try:
             report_data = ReportData(
-                discipline=report_context[0],
-                topic=report_context[1],
-                student=report_context[2],
-                teacher=report_context[3],
+                discipline=f'{rc[0][0].upper()}{rc[0][1:]}',
+                topic=f'{rc[1][0].upper()}{rc[1][1:]}',
+                student=rc[2].title(),
+                teacher=rc[3].title(),
             )
 
             await docxer.report(msg, report_data)
