@@ -101,7 +101,7 @@ class _Docxer(object):
 
         self._delete_file(file_path)
 
-    async def report(self, msg: types.Message, report_data: ReportData) -> None:
+    async def send_report(self, msg: types.Message, report_data: ReportData) -> None:
         document = self._template_engine(
             self._get_template_path(_Docxer._REPORT_TEMPLATE_NAME)
         )

@@ -28,7 +28,7 @@ def init_handlers(dispatcher: BotanistDispatcher) -> None:
                 teacher=rc[3].title()
             )
 
-            await docxer.report(msg, report_data)
+            await docxer.send_report(msg, report_data)
         except IndexError:
             await msg.reply(
                 '<b>🛀🏽 Недостаточно аргументов</b>\n\n' \
