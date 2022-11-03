@@ -12,7 +12,7 @@ from .musician import musician
 def init_handlers(dispatcher: BotanistDispatcher) -> None:
     def format_hint(format: str) -> str:
         return \
-            '<b>Используйте данный формат:</b>\n' \
+            '<b>Формат команды:</b>\n' \
             f'<code>{format}</code>'
 
 
