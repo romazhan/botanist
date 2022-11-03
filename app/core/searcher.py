@@ -26,7 +26,7 @@ class _Searcher(object):
     def surf(self, topic: str, summary: bool = False) -> str:
         warnings.simplefilter('ignore')
 
-        content = f'{topic}: ничего не найдено 🥹'
+        content = f'{topic}: ничего не найдено'
 
         def _surf(pages: list) -> None:
             nonlocal content

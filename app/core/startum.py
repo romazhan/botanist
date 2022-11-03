@@ -49,8 +49,7 @@ def init_handlers(dispatcher: BotanistDispatcher) -> None:
             await msg.reply('<code>/wiki тема</code>')
             return
 
-        search_result = searcher.surf(topic, True)
-        await msg.reply(search_result)
+        await msg.reply(searcher.surf(topic, True))
 
 
     @dispatcher.message_handler(commands=['music'])
