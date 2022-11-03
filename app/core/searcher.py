@@ -20,7 +20,7 @@ class _Searcher(object):
         content = f'== Введение ==\n\n{content}'
         content = re.sub('  +|\n+', '\n', content)
         content = content.replace('—', '-')
-            
+        
         return content
 
     def surf(self, topic: str, summary: bool = False) -> str:
