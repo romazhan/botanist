@@ -9,10 +9,10 @@ import random
 import re
 
 
-class Searcher(object):
+class _Searcher(object):
     _PAGE_LIMIT = 1 # ?
 
-    def __init__(self: Searcher) -> None:
+    def __init__(self: _Searcher) -> None:
         self._wiki = wikipedia
         self._wiki.set_lang('ru')
 
@@ -20,13 +20,13 @@ class Searcher(object):
         content = f'== Введение ==\n\n{content}'
         content = re.sub('  +|\n+', '\n', content)
         content = content.replace('—', '-')
-
+            
         return content
 
-    def surf(self, topic: str) -> str: # content
+    def surf(self, topic: str, summary: bool = False) -> str:
         warnings.simplefilter('ignore')
 
-        content = 'Контент не найден...'
+        content = f'{topic}: ничего не найдено 🥹'
 
         def _surf(pages: list) -> None:
             nonlocal content
@@ -34,13 +34,19 @@ class Searcher(object):
             if pages:
                 page = random.choice(pages)
                 try:
-                    content = self._filter(
-                        self._wiki.page(page, auto_suggest=False).content
-                    )
+                    if summary:
+                        content = self._wiki.summary(page, auto_suggest=False)
+                    else:
+                        content = self._filter(
+                            self._wiki.page(page, auto_suggest=False).content
+                        )
                 except wikipedia.exceptions.DisambiguationError:
                     pages.remove(page)
                     _surf(pages)
         
-        _surf(self._wiki.search(topic)[:Searcher._PAGE_LIMIT] or [])
+        _surf(self._wiki.search(topic)[:_Searcher._PAGE_LIMIT] or [])
         
         return content
+
+
+searcher = _Searcher()

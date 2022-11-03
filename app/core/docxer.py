@@ -5,7 +5,7 @@ import aiogram.types as types
 from typing import NamedTuple
 
 from docxtpl import DocxTemplate
-from .searcher import Searcher
+from .searcher import searcher
 
 from docx import Document
 from docx.shared import Pt
@@ -78,7 +78,7 @@ class _Docxer(object):
     def __init__(self: _Docxer) -> None:
         self._template_engine = DocxTemplate
         self._compilator = _Compilator()
-        self._searcher = Searcher()
+        self._searcher = searcher
     
     def _get_template_path(self, template_name: str) -> str:
         return f'{_Docxer._TEMPLATES_PATH}/{template_name}'

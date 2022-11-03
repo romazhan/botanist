@@ -4,6 +4,7 @@ from aiogram import types
 from .kernel import BotanistDispatcher
 
 from .docxer import ReportData, docxer
+from .searcher import searcher
 from .musician import musician
 
 
@@ -38,6 +39,18 @@ def init_handlers(dispatcher: BotanistDispatcher) -> None:
         except Exception as unhandled_error:
             print(f'[unhandled_error][report]: {unhandled_error}')
             await msg.reply('Ошибка на сервере...')
+
+
+    @dispatcher.message_handler(commands=['wiki'])
+    async def _(msg: types.Message) -> None:
+        topic = msg.get_args().strip()
+
+        if not topic:
+            await msg.reply('<code>/wiki тема</code>')
+            return
+
+        search_result = searcher.surf(topic, True)
+        await msg.reply(search_result)
 
 
     @dispatcher.message_handler(commands=['music'])
