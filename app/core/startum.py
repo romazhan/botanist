@@ -10,6 +10,12 @@ from .musician import musician
 
 # front-controller:
 def init_handlers(dispatcher: BotanistDispatcher) -> None:
+    def format_hint(format: str) -> str:
+        return \
+            '<b>Используйте данный формат:</b>\n' \
+            f'<code>{format}</code>'
+
+
     @dispatcher.message_handler(commands=['start'])
     async def _(msg: types.Message) -> None:
         await msg.answer('Started')
@@ -31,14 +37,11 @@ def init_handlers(dispatcher: BotanistDispatcher) -> None:
 
             await docxer.send_report(msg, report_data)
         except IndexError:
-            await msg.reply(
-                '<b>🛀🏽 Недостаточно аргументов</b>\n\n' \
-                '🦧 Используйте следующий формат:\n' \
-                '<code>/report дисциплина, тема, студент, учитель</code>'
-            )
+            await msg.reply(format_hint('/report дисциплина, тема, студент, учитель'))
         except Exception as unhandled_error:
             print(f'[unhandled_error][report]: {unhandled_error}')
-            await msg.reply('Ошибка на сервере...')
+
+            await msg.reply('Реферат не удался 🤒')
 
 
     @dispatcher.message_handler(commands=['wiki'])
@@ -46,10 +49,15 @@ def init_handlers(dispatcher: BotanistDispatcher) -> None:
         topic = msg.get_args().strip()
 
         if not topic:
-            await msg.reply('<code>/wiki тема</code>')
+            await msg.reply(format_hint('/wiki тема'))
             return
 
-        await msg.reply(searcher.surf(topic, True))
+        try:
+            await msg.reply(searcher.surf(topic, True))
+        except Exception as unhandled_error:
+            print(f'[unhandled_error][wiki]: {unhandled_error}')
+
+            await msg.reply('Почему-то не смог найти 🥲')
 
 
     @dispatcher.message_handler(commands=['music'])
@@ -58,4 +66,5 @@ def init_handlers(dispatcher: BotanistDispatcher) -> None:
             await musician.send_random_music(msg)
         except Exception as unhandled_error:
             print(f'[unhandled_error][music]: {unhandled_error}')
-            await msg.reply('Музыки не будет...')
+
+            await msg.reply('Музыки не будет 😓')

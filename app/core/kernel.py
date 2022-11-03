@@ -17,7 +17,8 @@ import gc
 
 class Botanist(Bot):
     _PARSE_MODE = types.ParseMode.HTML
-    _DELAY_FOR_RESTART = 5 # sec.
+
+    _DELAY_FOR_RESTART = 5 # sec
 
     def __init__(self: Botanist, telegram_token: str) -> None:
         Bot.__init__(self, telegram_token, parse_mode=Botanist._PARSE_MODE)
