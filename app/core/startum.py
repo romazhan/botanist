@@ -37,7 +37,7 @@ def init_handlers(dispatcher: BotanistDispatcher) -> None:
 
             await docxer.send_report(msg, report_data)
         except IndexError:
-            await msg.reply(format_hint('/report дисциплина, тема, студент, учитель'))
+            await msg.reply(format_hint('/report дисциплина, тема, студент, препод'))
         except Exception as unhandled_error:
             print(f'[unhandled_error][report]: {unhandled_error}')
 
