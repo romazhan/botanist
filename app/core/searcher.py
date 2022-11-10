@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import wikipedia
+import langid
 
 import warnings
 
@@ -14,10 +15,19 @@ class _Searcher(object):
 
     def __init__(self: _Searcher) -> None:
         self._wiki = wikipedia
-        self._wiki.set_lang('ru')
+    
+    def _set_lang_by_text(self, text: str) -> None:
+        prefix = langid.classify(text)[0]
+        prefix = 'en' if prefix == 'en' else 'ru'
+
+        self._wiki.set_lang(prefix)
+        self._lang = prefix
+    
+    def _enoru(self, en: str, ru: str) -> str:
+        return en if self._lang == 'en' else ru
 
     def _filter(self, content: str) -> str:
-        content = f'== Введение ==\n\n{content}'
+        content = f"{self._enoru('== Introduction ==', '== Введение ==')}\n\n{content}"
         content = re.sub('  +|\n+', '\n', content)
         content = content.replace('—', '-')
         
@@ -26,7 +36,9 @@ class _Searcher(object):
     def surf(self, topic: str, summary: bool = False) -> str:
         warnings.simplefilter('ignore')
 
-        content = f'{topic}: ничего не найдено'
+        self._set_lang_by_text(topic)
+
+        content = f"{topic}: {self._enoru('nothing found', 'ничего не найдено')}"
 
         def _surf(pages: list) -> None:
             nonlocal content
@@ -43,7 +55,7 @@ class _Searcher(object):
                 except wikipedia.exceptions.DisambiguationError:
                     pages.remove(page)
                     _surf(pages)
-        
+
         _surf(self._wiki.search(topic)[:_Searcher._PAGE_LIMIT] or [])
         
         return content
