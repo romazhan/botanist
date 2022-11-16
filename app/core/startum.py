@@ -5,6 +5,7 @@ from .kernel import BotanistDispatcher
 
 from .docxer import ReportData, docxer
 from .searcher import searcher
+from .translator import translator
 from .musician import musician
 
 
@@ -58,6 +59,22 @@ def init_handlers(dispatcher: BotanistDispatcher) -> None:
             print(f'[unhandled_error][wiki]: {unhandled_error}')
 
             await msg.reply('Почему-то не смог найти 🥲')
+
+
+    @dispatcher.message_handler(commands=['translate'])
+    async def _(msg: types.Message) -> None:
+        text = msg.get_args().strip()
+
+        if not text:
+            await msg.reply(format_hint('/translate текст'))
+            return
+
+        try:
+            await msg.reply(translator.translate(text))
+        except Exception as unhandled_error:
+            print(f'[unhandled_error][translate]: {unhandled_error}')
+
+            await msg.reply('Перевод не удался 🤯')
 
 
     @dispatcher.message_handler(commands=['music'])
