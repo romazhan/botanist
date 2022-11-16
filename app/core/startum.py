@@ -4,8 +4,8 @@ from aiogram import types
 from .kernel import BotanistDispatcher
 
 from .docxer import ReportData, docxer
-from .searcher import searcher
 from .translator import translator
+from .searcher import searcher
 from .musician import musician
 
 
@@ -19,7 +19,10 @@ def init_handlers(dispatcher: BotanistDispatcher) -> None:
 
     @dispatcher.message_handler(commands=['start'])
     async def _(msg: types.Message) -> None:
-        await msg.answer('Started')
+        await msg.answer(\
+            'Botanist работает исправно.\n' \
+            'Нажмите на <b>Меню</b> для просмотра команд.'
+        )
 
 
     @dispatcher.message_handler(commands=['report'])
@@ -45,22 +48,6 @@ def init_handlers(dispatcher: BotanistDispatcher) -> None:
             await msg.reply('Реферат не удался 🤒')
 
 
-    @dispatcher.message_handler(commands=['wiki'])
-    async def _(msg: types.Message) -> None:
-        topic = msg.get_args().strip()
-
-        if not topic:
-            await msg.reply(format_hint('/wiki тема'))
-            return
-
-        try:
-            await msg.reply(searcher.surf(topic, True))
-        except Exception as unhandled_error:
-            print(f'[unhandled_error][wiki]: {unhandled_error}')
-
-            await msg.reply('Почему-то не смог найти 🥲')
-
-
     @dispatcher.message_handler(commands=['translate'])
     async def _(msg: types.Message) -> None:
         text = msg.get_args().strip()
@@ -75,6 +62,22 @@ def init_handlers(dispatcher: BotanistDispatcher) -> None:
             print(f'[unhandled_error][translate]: {unhandled_error}')
 
             await msg.reply('Перевод не удался 🤯')
+
+
+    @dispatcher.message_handler(commands=['wiki'])
+    async def _(msg: types.Message) -> None:
+        topic = msg.get_args().strip()
+
+        if not topic:
+            await msg.reply(format_hint('/wiki тема'))
+            return
+
+        try:
+            await msg.reply(searcher.surf(topic, True))
+        except Exception as unhandled_error:
+            print(f'[unhandled_error][wiki]: {unhandled_error}')
+
+            await msg.reply('Почему-то не смог найти 🥲')
 
 
     @dispatcher.message_handler(commands=['music'])
