@@ -7,6 +7,7 @@ from .docxer import ReportData, docxer
 from .translator import translator
 from .searcher import searcher
 from .musician import musician
+from .catter import catter
 
 
 # front-controller:
@@ -78,6 +79,16 @@ def init_handlers(dispatcher: BotanistDispatcher) -> None:
             print(f'[unhandled_error][wiki]: {unhandled_error}')
 
             await msg.reply('Почему-то не смог найти 🥲')
+
+
+    @dispatcher.message_handler(commands=['cat'])
+    async def _(msg: types.Message) -> None:
+        try:
+            await catter.send_random_cat_img(msg)
+        except Exception as unhandled_error:
+            print(f'[unhandled_error][cat]: {unhandled_error}')
+
+            await msg.reply('Не удалось отправить котика 😿')
 
 
     @dispatcher.message_handler(commands=['music'])
