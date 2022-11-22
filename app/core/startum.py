@@ -6,8 +6,8 @@ from .kernel import BotanistDispatcher
 from .docxer import ReportData, docxer
 from .translator import translator
 from .searcher import searcher
-from .musician import musician
 from .catter import catter
+from .musician import musician
 
 
 # front-controller:
