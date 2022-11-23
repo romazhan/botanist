@@ -7,7 +7,7 @@ import aiogram.types as types
 
 from typing import List, Union
 
-import requests
+import aiohttp
 
 import random
 import json
@@ -27,6 +27,9 @@ class _Musician(object):
     _MAX_ATTEMPT_NUMBER = 5
     _MIN_BYTE_LENGTH = 9999
 
+    def __init__(self: _Musician) -> None:
+        self._http = aiohttp.ClientSession()
+
     def _create_temp_path(self, file_name: str) -> str:
         return f'{_Musician._TEMP_PATH}/' \
             f"{file_name.replace(' ', '_')}_" \
@@ -38,12 +41,14 @@ class _Musician(object):
         except (PermissionError, FileNotFoundError):
             pass
 
-    def _get_music_list(self) -> Union[List[str, str], None]: # [title, url] | None
+    async def _get_music_list(self) -> Union[List[str, str], None]: # [title, url] | None
         music_data = []
 
         target_data = _Musician._TARGET_DATA
 
-        text_content = requests.get(target_data['site_url']).text
+        r = await self._http.get(target_data['site_url'])
+        text_content = await r.text()
+
         soup = BS(text_content, features='lxml')
         
         tag_list = soup.find_all(target_data['tag'], {
@@ -58,8 +63,8 @@ class _Musician(object):
         
         return music_data
 
-    def _get_music_context(self) -> Union[List[str, bytes], None]: # [title, bytes] | None
-        music_list = self._get_music_list()
+    async def _get_music_context(self) -> Union[List[str, bytes], None]: # [title, bytes] | None
+        music_list = await self._get_music_list()
 
         if not music_list:
             return
@@ -67,7 +72,9 @@ class _Musician(object):
         music_context = None
         for _ in range(0, _Musician._MAX_ATTEMPT_NUMBER):
             ml = random.choice(music_list)
-            b = requests.get(ml[1]).content
+
+            r = await self._http.get(ml[1])
+            b = await r.read()
 
             if len(b) >= _Musician._MIN_BYTE_LENGTH:
                 music_context = [ml[0], b]
@@ -90,7 +97,7 @@ class _Musician(object):
         self._delete_file(file_path)
 
     async def send_random_music(self, msg: types.Message) -> None:
-        music_context = self._get_music_context()
+        music_context = await self._get_music_context()
 
         if not music_context:
             site_url = _Musician._TARGET_DATA['site_url']
