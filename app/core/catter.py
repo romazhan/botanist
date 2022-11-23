@@ -18,16 +18,16 @@ class _Catter(object):
 
         return r_json[0]['url']
     
-    async def _get_cat_img_content(self) -> bytes:
+    async def _get_cat_img_bytes(self) -> bytes:
         img_url = await self._get_cat_img_url()
         r = await self._http.get(img_url)
 
         return await r.read()
 
     async def send_random_cat_img(self, msg: types.Message) -> None:
-        img_content = await self._get_cat_img_content()
+        img_bytes = await self._get_cat_img_bytes()
 
-        await msg.answer_photo(img_content)
+        await msg.answer_photo(img_bytes)
 
 
 catter = _Catter()

@@ -9,4 +9,3 @@ __pycache__/
 
 # Created files
 app/storage/temp/docs/*.docx
-app/storage/temp/audio/*.mp3

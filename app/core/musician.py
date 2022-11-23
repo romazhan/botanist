@@ -11,7 +11,6 @@ import aiohttp
 
 import random
 import json
-import os
 
 
 class _Musician(object):
@@ -22,27 +21,14 @@ class _Musician(object):
         'meta': 'data-musmeta'
     }
 
-    _TEMP_PATH = './storage/temp/audio'
-
     _MAX_ATTEMPT_NUMBER = 5
     _MIN_BYTE_LENGTH = 9999
 
     def __init__(self: _Musician) -> None:
         self._http = aiohttp.ClientSession()
 
-    def _create_temp_path(self, file_name: str) -> str:
-        return f'{_Musician._TEMP_PATH}/' \
-            f"{file_name.replace(' ', '_')}_" \
-            f'{random.randint(100000, 999999)}.mp3'
-    
-    def _delete_file(self, file_path: str) -> None:
-        try:
-            os.remove(file_path)
-        except (PermissionError, FileNotFoundError):
-            pass
-
-    async def _get_music_list(self) -> Union[List[str, str], None]: # [title, url] | None
-        music_data = []
+    async def _get_random_music_urls(self) -> Union[List[str], None]: # List[url] | None
+        music_urls = []
 
         target_data = _Musician._TARGET_DATA
 
@@ -58,48 +44,33 @@ class _Musician(object):
         for tag in tag_list:
             music_meta = tag.get(target_data['meta'])
 
-            json_list = json.loads(music_meta)
-            music_data.append([json_list['title'], json_list['url']])
+            music_urls.append(json.loads(music_meta)['url'])
         
-        return music_data
+        return music_urls
 
-    async def _get_music_context(self) -> Union[List[str, bytes], None]: # [title, bytes] | None
-        music_list = await self._get_music_list()
+    async def _get_random_music_bytes(self) -> Union[bytes, None]: # bytes | None
+        music_urls = await self._get_random_music_urls()
 
-        if not music_list:
+        if not music_urls:
             return
         
-        music_context = None
+        music_bytes = None
         for _ in range(0, _Musician._MAX_ATTEMPT_NUMBER):
-            ml = random.choice(music_list)
+            url = random.choice(music_urls)
 
-            r = await self._http.get(ml[1])
+            r = await self._http.get(url)
             b = await r.read()
 
             if len(b) >= _Musician._MIN_BYTE_LENGTH:
-                music_context = [ml[0], b]
+                music_bytes = b
                 break
 
-        return music_context
-
-    def _save_music(self, music_context: List[str, bytes]) -> str:
-        file_path = self._create_temp_path(music_context[0])
-        with open(file_path, 'wb') as f:
-            f.write(music_context[1])
-        
-        return file_path
-
-    async def _send_music(self, msg: types.Message, file_path: str) -> None:
-        file = open(file_path, 'rb')
-        await msg.reply_audio(file)
-        file.close()
-
-        self._delete_file(file_path)
+        return music_bytes
 
     async def send_random_music(self, msg: types.Message) -> None:
-        music_context = await self._get_music_context()
+        music_bytes = await self._get_random_music_bytes()
 
-        if not music_context:
+        if not music_bytes:
             site_url = _Musician._TARGET_DATA['site_url']
 
             await msg.reply('Не удалось получить музыку...\n\n' \
@@ -107,8 +78,7 @@ class _Musician(object):
             )
             return
 
-        file_path = self._save_music(music_context)
-        await self._send_music(msg, file_path)
+        await msg.reply_audio(music_bytes)
 
 
 musician = _Musician()
