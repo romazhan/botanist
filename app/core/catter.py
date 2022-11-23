@@ -12,20 +12,20 @@ class _Catter(object):
     def __init__(self: _Catter) -> None:
         self._http = aiohttp.ClientSession()
     
-    async def _get_cat_img_url(self) -> str:
+    async def _get_random_cat_img_url(self) -> str:
         r = await self._http.get(_Catter._RANDOM_IMG_API_URL)
         r_json = await r.json()
 
         return r_json[0]['url']
     
-    async def _get_cat_img_bytes(self) -> bytes:
-        img_url = await self._get_cat_img_url()
+    async def _get_random_cat_img_bytes(self) -> bytes:
+        img_url = await self._get_random_cat_img_url()
         r = await self._http.get(img_url)
 
         return await r.read()
 
     async def send_random_cat_img(self, msg: types.Message) -> None:
-        img_bytes = await self._get_cat_img_bytes()
+        img_bytes = await self._get_random_cat_img_bytes()
 
         await msg.answer_photo(img_bytes)
 
