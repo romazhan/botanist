@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from aiogram import types
+from aiogram.filters import Command, CommandObject
 
 from .kernel import BotanistDispatcher
 
@@ -18,7 +19,7 @@ def init_handlers(dispatcher: BotanistDispatcher) -> None:
             f'<code>{format}</code>'
 
 
-    @dispatcher.message_handler(commands=['start'])
+    @dispatcher.message(Command('start'))
     async def _(msg: types.Message) -> None:
         await msg.answer(\
             'Botanist работает исправно.\n' \
@@ -26,11 +27,11 @@ def init_handlers(dispatcher: BotanistDispatcher) -> None:
         )
 
 
-    @dispatcher.message_handler(commands=['report'])
-    async def _(msg: types.Message) -> None:
+    @dispatcher.message(Command('report'))
+    async def _(msg: types.Message, command: CommandObject) -> None:
         rc = list(map( # report context
-            str.strip, msg.get_args().split(',')
-        ))
+            str.strip, command.args.split(',') if command.args else None
+        )) if command.args else ()
 
         try:
             report_data = ReportData(
@@ -49,9 +50,9 @@ def init_handlers(dispatcher: BotanistDispatcher) -> None:
             await msg.reply('Реферат не удался 🤒')
 
 
-    @dispatcher.message_handler(commands=['translate'])
-    async def _(msg: types.Message) -> None:
-        text = msg.get_args().strip()
+    @dispatcher.message(Command('translate'))
+    async def _(msg: types.Message, command: CommandObject) -> None:
+        text = command.args.strip() if command.args else None
 
         if not text:
             await msg.reply(format_hint('/translate текст'))
@@ -65,9 +66,9 @@ def init_handlers(dispatcher: BotanistDispatcher) -> None:
             await msg.reply('Перевод не удался 🤯')
 
 
-    @dispatcher.message_handler(commands=['wiki'])
-    async def _(msg: types.Message) -> None:
-        topic = msg.get_args().strip()
+    @dispatcher.message(Command('wiki'))
+    async def _(msg: types.Message, command: CommandObject) -> None:
+        topic = command.args.strip() if command.args else None
 
         if not topic:
             await msg.reply(format_hint('/wiki тема'))
@@ -81,7 +82,7 @@ def init_handlers(dispatcher: BotanistDispatcher) -> None:
             await msg.reply('Почему-то не смог найти 🥲')
 
 
-    @dispatcher.message_handler(commands=['cat'])
+    @dispatcher.message(Command('cat'))
     async def _(msg: types.Message) -> None:
         try:
             await catter.send_random_cat_img(msg)
@@ -91,7 +92,7 @@ def init_handlers(dispatcher: BotanistDispatcher) -> None:
             await msg.reply('Не удалось отправить котика 😿')
 
 
-    @dispatcher.message_handler(commands=['music'])
+    @dispatcher.message(Command('music'))
     async def _(msg: types.Message) -> None:
         try:
             await musician.send_random_music(msg)

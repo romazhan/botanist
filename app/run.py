@@ -2,14 +2,13 @@
 from core.exceptions import TelegramTokenError
 
 from core.kernel import Botanist
-from core.startum import init_handlers
 
 from dotenv import load_dotenv
 from sys import argv
-import os
+import asyncio, os
 
 
-def self_init() -> Botanist:
+async def self_init() -> None:
     ROOT = os.path.dirname(argv[0])
     ROOT and os.chdir(ROOT)
 
@@ -20,9 +19,11 @@ def self_init() -> Botanist:
         raise TelegramTokenError('empty TELEGRAM_TOKEN in .env', True)
 
     bot, dispatcher = Botanist(TOKEN).get_instance()
+
+    from core.startum import init_handlers
     init_handlers(dispatcher)
 
-    return bot
+    await bot.run()
 
 if __name__ == '__main__':
-    self_init().run()
+    asyncio.run(self_init())

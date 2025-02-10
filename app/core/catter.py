@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import aiogram.types as types
+from aiogram.types.input_file import BufferedInputFile
 
 import aiohttp
 
@@ -27,7 +28,7 @@ class _Catter(object):
     async def send_random_cat_img(self, msg: types.Message) -> None:
         img_bytes = await self._get_random_cat_img_bytes()
 
-        await msg.answer_photo(img_bytes)
+        await msg.answer_photo(BufferedInputFile(img_bytes, 'cat.jpg'))
 
 
 catter = _Catter()

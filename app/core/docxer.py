@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import aiogram.types as types
+from aiogram.types.input_file import BufferedInputFile
 from typing import NamedTuple
 
 from docxtpl import DocxTemplate
@@ -96,7 +97,7 @@ class _Docxer(object):
     
     async def _send_file(self, msg: types.Message, file_path: str) -> None:
         file = open(file_path, 'rb')
-        await msg.reply_document(file)
+        await msg.reply_document(BufferedInputFile(file.read(), file.name))
         file.close()
 
         self._delete_file(file_path)

@@ -4,6 +4,7 @@ from __future__ import annotations
 from bs4 import BeautifulSoup as BS
 
 import aiogram.types as types
+from aiogram.types.input_file import BufferedInputFile
 
 from typing import List, Union
 
@@ -78,7 +79,7 @@ class _Musician(object):
             )
             return
 
-        await msg.reply_audio(music_bytes)
+        await msg.reply_audio(BufferedInputFile(music_bytes, 'music.mp3'))
 
 
 musician = _Musician()

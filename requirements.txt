@@ -1,7 +1,8 @@
-﻿aiogram==2.22.1
+﻿aiogram==3.17.0
 python-dotenv==0.21.0
 python-docx==0.8.11
 docxtpl==0.16.4
 wikipedia==1.4.0
 langid==1.1.6
 googletrans==4.0.0rc1
+legacy-cgi==2.6.2
